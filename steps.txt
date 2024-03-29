@@ -1,0 +1,39 @@
+HOME POWER MONITOR CONFIGURATION
+
+--- Set up and install rasperry pi ---
+download software onto SD card from laptop
+insert SD card into raspberry and boot up
+sudo raspi-config
+enable ssh
+
+
+--- Configure sensors ---
+sudo apt-get install python-serial
+
+
+--- Install php ---
+sudo apt-get install php -y
+
+
+--- Set up apache2 ---
+sudo apt-get install apache2 -y
+
+--- Install sqlite3 ---
+sudo apt-get install php-sqlite3
+sudo systemctl restart apache2
+
+
+--- Find IP address ---
+10.0.0.1 for gateway
+10.0.0.223 for raspberry pi
+127.0.0.1 internal IP
+68.42.48.171 external IP
+
+
+--- find out which program uses the serial port use the command below
+sudo fuser -v /dev/ttyAMA0
+-- to kill it do: sudo kill 605 (number changes)
+
+
+
+
