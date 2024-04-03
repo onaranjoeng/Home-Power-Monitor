@@ -67,7 +67,6 @@ switch ($action) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Settings</title>
-    <title><?php echo $settings['home_name']; ?></title>
     <link rel="stylesheet" href="css/styles.css"> 
 
 </head>
