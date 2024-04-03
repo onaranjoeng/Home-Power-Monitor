@@ -1,4 +1,6 @@
-HOME POWER MONITOR CONFIGURATION
+// LATEST UPDATE 4/2/2024
+
+== HOME POWER MONITOR CONFIGURATION ==
 
 --- Set up and install rasperry pi ---
 download software onto SD card from laptop
@@ -30,9 +32,52 @@ sudo systemctl restart apache2
 68.42.48.171 external IP
 
 
---- find out which program uses the serial port use the command below
+--- find out which program uses the serial port use the command below---
 sudo fuser -v /dev/ttyAMA0
--- to kill it do: sudo kill 605 (number changes)
+to kill it do: sudo kill 605 (number changes)
+
+---- create the service ----
+cd /etc/systemd/system/
+THIS is the code for serial_daemon.service:
+[Unit]
+Description=Serial Daemon Service
+
+[Service]
+ExecStart=/usr/bin/python3 /var/www/html/serial_daemon.py
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
+// end of code
+
+NEXT:
+Enable and Start the Service:
+sudo systemctl enable serial_daemon.service
+Start the service: 
+sudo systemctl start serial_daemon.service
+
+check if system is running: systemctl is-active serial_daemon.service
+
+=== CONFIGURE sudo visudo ======
+
+Monitor ALL=(ALL) NOPASSWD: /var/www/html/serial_daemon_service.py
+root ALL=(ALL) NOPASSWD: /var/www/html/serial_daemon_service.py
+www-data ALL=(ALL) NOPASSWD: /var/www/html/serial_daemon_service.py
+www-data ALL=(ALL) NOPASSWD: /bin/python3
+www-data ALL=(ALL) NOPASSWD: /usr/bin/pkill
+www-data ALL=(ALL) NOPASSWD: /usr/bin/python3 /var/www/html/serial_daemon_service.py
+www-data ALL=(ALL) NOPASSWD: /var/www/html/serial_daemon_service.py
+www-data ALL=(ALL) NOPASSWD: /usr/bin/fuser
+
+THEN give access to fuser:
+sudo chmod +s /usr/bin/fuser
+============================
+
+
+
+
+
 
 
 
