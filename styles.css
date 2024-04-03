@@ -16,6 +16,9 @@ body {
     color: #fff;
 }
 
+head title {
+    color: white;
+}
 header {
     display: flex;
     flex-direction: column;
@@ -24,6 +27,10 @@ header {
     padding: 20px;
     background-color: #087434;
     text-align: center;
+}
+
+h2 {
+    font-size: 25px; 
 }
 
 nav {
@@ -101,8 +108,17 @@ canvas {
     width: 80%;
     max-width: 1000px;
     margin: auto;
-    
+    margin-top: 25px;
+    margin-bottom: 25px;
 }
+
+.chart-container h2 {
+    text-align: center;
+    color: black; /* Change the color to black */
+    padding: 20px 0;
+    margin-top: 25px;
+}
+
 .chart-row {
     margin-top: 25px;
     display: flex;
@@ -125,5 +141,26 @@ text {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 19px; 
+    font-size: 20px; 
+}
+
+footer {
+    width: 100%;
+    background-color: #087434;
+    position: relative;
+    color: white;
+    left: 0;
+    bottom: 0;
+    position: fixed;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+footer img {
+    width: 130px;
+    height: auto;
+    margin-right: 10px;
+
 }
