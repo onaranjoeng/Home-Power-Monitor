@@ -1,4 +1,5 @@
 <?php
+// LATEST UPDATE 4/2/2024
 // Activity.php page
 // Database connection
 $dbConnection = new PDO('sqlite:power_data.db');
@@ -6,13 +7,13 @@ $dbConnection = new PDO('sqlite:power_data.db');
 // Function to get daily power consumption for the last 7 days
 function getWeeklyPowerData() {
     global $dbConnection;
-    $stmt = $dbConnection->query("SELECT strftime('%Y-%m-%d', datetime) AS day, SUM(real_power_CT1) + SUM(real_power_CT2) AS total_power FROM power_data GROUP BY day ORDER BY day DESC LIMIT 7");
+    $stmt = $dbConnection->query("SELECT strftime('%m-%d-%Y', datetime) AS day, SUM(real_power_CT1) + SUM(real_power_CT2) AS total_power FROM power_data GROUP BY day ORDER BY day DESC LIMIT 7");
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return array_reverse($result); // Reverse the array to start from the oldest day
 }
 
 $weeklyPowerData = getWeeklyPowerData();
-?>
+?> 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,7 +60,7 @@ $weeklyPowerData = getWeeklyPowerData();
                 datasets: [{
                     label: 'Total Power (kWh)',
                     data: powerValues,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    backgroundColor: 'rgba(54, 162, 235, 1)',
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
                 }]
@@ -86,13 +87,13 @@ $weeklyPowerData = getWeeklyPowerData();
                     label: 'Costs ($)',
                     data: costValues,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(201, 203, 207, 0.2)'
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(201, 203, 207, 1)'
                     ],
                     borderColor: [
                         'rgba(255, 99, 132, 1)',
