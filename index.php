@@ -33,6 +33,11 @@ if (file_exists($filename)) {
 $dbConnection = new PDO('sqlite:power_data.db');
 $dbConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+// Fetch the settings
+$stmt = $dbConnection->query('SELECT * FROM power_data_settings');
+$settings = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
 $action = $_GET['action'] ?? '';
 
 switch ($action) {
@@ -105,6 +110,8 @@ switch ($action) {
         <a href="settings.php">Settings</a>
     </nav>
 
+    <h2 class="home-name"><?php echo htmlspecialchars($settings['home_name']); ?></h2>
+
     <footer>
         <img src="footer_logo.png" alt="Footer Image">
         &copy; <?php echo date("Y"); ?> Team 306
@@ -125,18 +132,18 @@ switch ($action) {
             data: {
                             labels: [], // Empty initially
                             datasets: [{
-                                label: 'CT1 Avg Power',
+                                label: '<?php echo ($settings['ct1_label']); ?>',
                                 data: [],
                                 backgroundColor: 'rgba(255, 76, 48)',
                                 borderColor: 'rgba(255, 76, 48)',
-                                borderWidth: 2,
+                                borderWidth: 3,
                                 fill: false
                             }, {
-                                label: 'CT2 Avg Power',
+                                label: '<?php echo ($settings['ct2_label']); ?>',
                                 data: [],
                                 backgroundColor: 'rgba(45, 85, 255)',
                                 borderColor: 'rgba(45, 85, 255)',
-                                borderWidth: 2,
+                                borderWidth: 3,
                                 fill: false
                             }]
             },
@@ -155,9 +162,17 @@ switch ($action) {
                             text: 'Real Time' // Label for the x-axis
                         }
                     }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 15 // Set the font size for the dataset labels
+                            }
+                        },
+                    }
                 }
             }
-
         });
 
             $('#startDaemon').click(function() {
