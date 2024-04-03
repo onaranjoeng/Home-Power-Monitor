@@ -1,6 +1,6 @@
 <?php
+// LATEST UPDATE 4/2/24
 // settings.php
-
 // if any errors show screen
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -73,13 +73,14 @@ switch ($action) {
 <body>
     <header>
         <h1>Settings</h1>
-        <p><?php echo $settings['home_name']; ?></p>
     </header>
     <nav>
         <a href="index.php">Live</a>
         <a href="activity.php">Activity</a>
         <a href="settings.php">Settings</a>
     </nav>
+
+    <h2 class="home-name"><?php echo htmlspecialchars($settings['home_name']); ?></h2>
 
     <footer>
         <img src="footer_logo.png" alt="Footer Image">
