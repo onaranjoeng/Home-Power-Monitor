@@ -1,8 +1,12 @@
 <?php
-// LATEST UPDATE 4/2/2024
+// LATEST UPDATE 4/2/24
 // Activity.php page
 // Database connection
 $dbConnection = new PDO('sqlite:power_data.db');
+
+// Fetch the settings
+$stmt = $dbConnection->query('SELECT * FROM power_data_settings');
+$settings = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Function to get daily power consumption for the last 7 days
 function getWeeklyPowerData() {
@@ -13,7 +17,10 @@ function getWeeklyPowerData() {
 }
 
 $weeklyPowerData = getWeeklyPowerData();
+
 ?> 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,13 +33,14 @@ $weeklyPowerData = getWeeklyPowerData();
 <body>
 <header>
         <h1>Activity</h1>
-        <p><?php echo $settings['home_name']; ?></p>
     </header>
     <nav>
         <a href="index.php">Live</a>
         <a href="activity.php">Activity</a>
         <a href="settings.php">Settings</a>
     </nav>
+
+    <h2 class="home-name"><?php echo htmlspecialchars($settings['home_name']); ?></h2>
 
     <footer>
         <img src="footer_logo.png" alt="Footer Image">
@@ -46,11 +54,13 @@ $weeklyPowerData = getWeeklyPowerData();
         <canvas id="costChart"></canvas>
     </div>
 
+    
+
     <script>
         var weeklyPowerData = <?php echo json_encode($weeklyPowerData); ?>;
         var labels = weeklyPowerData.map(function(data) { return data.day; });
-        var powerValues = weeklyPowerData.map(function(data) { return data.total_power; });
-        var costValues = powerValues.map(function(power) { return (power * 0.07).toFixed(2); }); // Calculate costs
+        var powerValues = weeklyPowerData.map(function(data) { return (data.total_power / 1000).toFixed(2); }); // Convert watts to kWh
+        var costValues = powerValues.map(function(power) { return (power * <?php echo $settings['KiloWatt_US']; ?>).toFixed(2); }); // Calculate costs
 
         // Weekly Power Consumption Chart
         var weeklyChart = new Chart(document.getElementById('weeklyChart'), {
@@ -72,6 +82,15 @@ $weeklyPowerData = getWeeklyPowerData();
                         title: {
                             display: true,
                             text: 'kWh'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 15 // Set the font size for the dataset labels
+                            }
                         }
                     }
                 }
@@ -104,7 +123,7 @@ $weeklyPowerData = getWeeklyPowerData();
                         'rgba(255, 159, 64, 1)',
                         'rgba(201, 203, 207, 1)'
                     ],
-                    borderWidth: 1
+                    borderWidth: 5
                 }]
             }
         });
