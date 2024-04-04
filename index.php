@@ -134,16 +134,16 @@ switch ($action) {
                             datasets: [{
                                 label: '<?php echo ($settings['ct1_label']); ?>',
                                 data: [],
-                                backgroundColor: 'rgba(255, 76, 48)',
-                                borderColor: 'rgba(255, 76, 48)',
-                                borderWidth: 3,
+                                backgroundColor: 'rgba(54, 162, 235, .8)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 2,
                                 fill: false
                             }, {
                                 label: '<?php echo ($settings['ct2_label']); ?>',
                                 data: [],
-                                backgroundColor: 'rgba(45, 85, 255)',
-                                borderColor: 'rgba(45, 85, 255)',
-                                borderWidth: 3,
+                                backgroundColor: 'rgba(255,165,1,.8)',
+                                borderColor: 'rgba(255,165,1,1)',
+                                borderWidth: 2,
                                 fill: false
                             }]
             },
@@ -183,7 +183,7 @@ switch ($action) {
                     startButton.style.display = "none";
                     stopButton.style.display = "block";
                      // Update values every 1 seconds
-                     intervalId = setInterval(updateValues, 1000);
+                     intervalId = setInterval(updateValues, 3000);
                 });
             });
 
@@ -223,6 +223,7 @@ switch ($action) {
                     if (valuesSettings.daemon_status === "running") {
                         startButton.style.display = "none";
                         stopButton.style.display = "block";
+                        intervalId = setInterval(updateValues, 3000);
                     } else {
                         startButton.style.display = "block";
                         stopButton.style.display = "none";
@@ -231,7 +232,7 @@ switch ($action) {
                     $('#ct2_label').text(valuesSettings.ct2_label);
                     
 
-                    intervalId = setInterval(updateValues, 1000);
+                    
                 });
             }
 

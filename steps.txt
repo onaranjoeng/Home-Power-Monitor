@@ -1,66 +1,105 @@
 // LATEST UPDATE 4/2/2024
+// THIS INFORMATION IS VERY IMPORTANT!!
+// ANY QUESTIONS REACH TO OGN23@OUTLOOK.COM 
 
 == HOME POWER MONITOR CONFIGURATION ==
 
+--- You just got your raspberry pi and RPICT3V1 hat LETS BEGIN! ---
+1.
 --- Set up and install rasperry pi ---
-download software onto SD card from laptop
-insert SD card into raspberry and boot up
-sudo raspi-config
-enable ssh
+Download software onto SD card from laptop
+Insert SD card into raspberry and boot up
+sudo raspi-config and enable ssh and disable bluetooth
 
-
+2.
 --- Configure sensors ---
 sudo apt-get install python-serial
 
-
+3.
 --- Install php ---
 sudo apt-get install php -y
 
-
---- Set up apache2 ---
+4.
+--- Set up apache2 server ---
 sudo apt-get install apache2 -y
+All the programs that make up the website should be in cd /var/www/htmp
 
+5.
 --- Install sqlite3 ---
 sudo apt-get install php-sqlite3
 sudo systemctl restart apache2
 
-
+6.
 --- Find IP address ---
+Terminal: ifconfig (look for wlan0 inet: .....)
 10.0.0.1 for gateway
 10.0.0.223 for raspberry pi
 127.0.0.1 internal IP
 68.42.48.171 external IP
+Oscar's Iphone: 172.20.10.5 
+
+7.
+--- Port Foward ---
+Log in to gateway via 10.0.0.1
+Go to router for user/password OR
+Enter user and password(usually admin/password)
+In settings... portfoward Port 22!!
+
+==== SERVER IS GOOD TO GO START CREATING YOUR WEBSITE!! ===
 
 
---- find out which program uses the serial port use the command below---
+=== COMMON PROBLEMS / EXTRA STEPS TAKEN TO SOLVE THEM ===
+
+--- Find out which program uses the serial at the same timeport use the command below---
+--- Usually get error "permission denied to /dev/ttyAMA0" thsi should do it ---
 sudo fuser -v /dev/ttyAMA0
-to kill it do: sudo kill 605 (number changes)
+To kill it do: sudo kill 605 (number changes) 
 
----- create the service ----
-cd /etc/systemd/system/
-THIS is the code for serial_daemon.service:
+--- Error above was implemented to the serial_daemon_service.py code!!!!!!!! ---
+--- Now it automatically kills it as soon as the raspberry turns on ----
+
+
+--- Error with database stopping due to start/stop daemon button ---
+--- Daemon stopped reading current data when user switched between pages ---
+--- Therefore a service was made to run in the back at all times ---
+
+---- First lets create the service (if not create it with nano filename.service)----
+This will be under: cd /etc/systemd/system/
+
+THIS IS THE CODE for serial_daemon.service!!!!
+
 [Unit]
 Description=Serial Daemon Service
 
 [Service]
-ExecStart=/usr/bin/python3 /var/www/html/serial_daemon.py
+ExecStart=sudo -u www-data python3 /var/www/html/serial_daemon_service.py
+User=www-data
+Group=www-data
 Restart=always
-User=root
+
 
 [Install]
 WantedBy=multi-user.target
 // end of code
 
-NEXT:
-Enable and Start the Service:
+--- Important: www-data is automatically created by apache2 as the username ---
+
+Useful terminal lines(can be used from anywhere):
+Enable the Service:
 sudo systemctl enable serial_daemon.service
 Start the service: 
 sudo systemctl start serial_daemon.service
+Stop the service: 
+sudo systemctl Stop serial_daemon.service
+Check if system is running: 
+systemctl is-active serial_daemon.service
 
-check if system is running: systemctl is-active serial_daemon.service
 
-=== CONFIGURE sudo visudo ======
-
+---- CONFIGURE sudo visudo (just type that into terminal) ---
+--- Add this to the end of the code ---
+--- Monitor is my raspberry username (yours will be different so change that) ---
+--- root or pi is the default user(admin) ---
+ 
 Monitor ALL=(ALL) NOPASSWD: /var/www/html/serial_daemon_service.py
 root ALL=(ALL) NOPASSWD: /var/www/html/serial_daemon_service.py
 www-data ALL=(ALL) NOPASSWD: /var/www/html/serial_daemon_service.py
@@ -70,9 +109,11 @@ www-data ALL=(ALL) NOPASSWD: /usr/bin/python3 /var/www/html/serial_daemon_servic
 www-data ALL=(ALL) NOPASSWD: /var/www/html/serial_daemon_service.py
 www-data ALL=(ALL) NOPASSWD: /usr/bin/fuser
 
-THEN give access to fuser:
+IMPORTANT give access to fuser:
 sudo chmod +s /usr/bin/fuser
 ============================
+
+
 
 
 
